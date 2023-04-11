@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[derive(Debug)]
 struct OrderBook {
     asks: HashMap<Price, Limit>,
@@ -12,14 +14,24 @@ impl OrderBook {
         }
     }
 
-    fn add_order(&mut self, order: Order) {
+    fn add_order(&mut self, price: f64, order: Order) {
         match order.bid_ask {
-            BidOrAsk::Ask => {
-                let price = Price::from_price(order
-            }
             BidOrAsk::Bid => {
-                self.bids.insert(order.price, order);
+                let price = Price::new(price);
+
+                match self.bids.get_mut(&price) {
+                    Some(limit) => limit.add_order(order),
+                    None => {
+                        let mut limit = Limit::new(price);
+                        limit.add_order(order);
+                        self.bids.insert(price, limit);
+                    }
+                }
             }
+
+            BidOrAsk::Ask => {
+            }
+    
         }
     }
 }
@@ -30,7 +42,7 @@ enum BidOrAsk {
     Bid,
     Ask,
 }
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
 struct Price {
     integral: u64,
     fractional : u64,
@@ -57,9 +69,9 @@ struct Limit {
 }
 
 impl Limit {
-    fn new(price: f64) -> Limit {
+    fn new(price: Price) -> Limit {
         Limit {
-            price: Price::new(price),
+            price,
             order: Vec::new(),
         }
     }
@@ -85,13 +97,18 @@ impl Order {
 }
 
 fn main() {
-    let mut limit = Limit::new(65.3);
-    let price = Price::new(90.5);
-    let buy = Order::new(BidOrAsk::Bid, 5.1);
-    let sell = Order::new(BidOrAsk::Ask, 2.4);
+    let bid = Order::new(BidOrAsk::Bid, 5.0);
+    let ask = Order::new(BidOrAsk::Ask, 2.0);
 
-    limit.add_order(buy);
-    limit.add_order(sell);
 
-    println!("{:?}", limit); 
+
+
+    let mut orderbook = OrderBook::new();
+    orderbook.add_order(2.0, bid);
+    orderbook.add_order(4.0, ask);
+
+
+    println!("{:?}", orderbook); 
+
+
 }
