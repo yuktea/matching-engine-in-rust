@@ -27,4 +27,31 @@ impl MatchingEngine {
             orderbooks: HashMap::new(),
         }
     }
+
+    pub fn add_new_market(&mut self, pair: TradingPair) {
+        self.orderbooks.insert(pair.clone(), Orderbook::new());
+
+        println!("opening new orderbook for market {:?}", pair.to_string());
+    }
+
+    pub fn place_limit_order(
+        &mut self,
+        pair: TradingPair,
+        price: f64,
+        order: Order,
+    ) -> Result<(), String> {
+        match self.orderbooks.get_mut(&pair) {
+            Some(orderbook) => {
+                orderbook.add_order(price, order);
+
+                println!("placed limit order at price level {}", price);
+
+                Ok(())
+            }
+            None => Err(format!(
+                "the orderbook for the given trading pair ({}) does not exist",
+                pair.to_string()
+            )),
+        }
+    }
 }
