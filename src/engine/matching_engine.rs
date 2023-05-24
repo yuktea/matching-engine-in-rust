@@ -31,7 +31,7 @@ impl MatchingEngine {
     pub fn add_new_market(&mut self, pair: TradingPair) {
         self.orderbooks.insert(pair.clone(), Orderbook::new());
 
-        println!("opening new orderbook for market {:?}", pair.to_string());
+        println!("New OrderBook For {:?}", pair.to_string());
     }
 
     pub fn place_limit_order(
@@ -44,12 +44,12 @@ impl MatchingEngine {
             Some(orderbook) => {
                 orderbook.add_order(price, order);
 
-                println!("placed limit order at price level {}", price);
+                println!("Limit Order Placed @ Price Level {}", price);
 
                 Ok(())
             }
             None => Err(format!(
-                "the orderbook for the given trading pair ({}) does not exist",
+                "The OrderBook for ({}) does not exist",
                 pair.to_string()
             )),
         }
