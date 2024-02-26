@@ -2,7 +2,7 @@
 
 ## Trading Engine in Rust
 
-This is a simple toy trading engine implemented in Rust. Please note that this trading engine is intended for educational purposes and not for actual trading in a production environment. It lacks many features and optimizations required for real-world trading systems.
+This is a simple toy trading engine implemented in Rust. Please note that this trading engine is intended for educational purposes and not for actual trading in a production environment.
 
 ## Features
 
